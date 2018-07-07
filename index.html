@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>云备忘录</title>
+		<link rel="stylesheet" href="./style/index.css">
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<section class="todoapp">
+			<header class="header">
+				<h1>云备忘录</h1>
+				<input class="new-todo" 
+						placeholder="What to do next" 
+						autofocus="" 
+						v-model="newTodo"
+						v-on:keyup.enter="addTodo">
+			</header>
+
+			<section class="main" v-show="showTodos">
+				<input class="toggle-all"
+						id="toggle-all"
+						type="checkbox"
+						v-model="allDone">
+				<label for="toggle-all">All Done</label>
+				<ul class="todo-list">
+					<li
+						v-for="(todo, index) in filteredTodos"
+						:key="'todo-' + index"
+						:class="{ completed: todo.completed, editing: todo === editedTodo}">
+						<div class="view">
+							<input class="toggle"
+									type="checkbox"
+									v-model="todo.completed">
+							<label @dblclick="editTodo(todo)" v-cloak>{{ todo.title }}</label>
+							<button class="destroy"
+									@click="removeTodo(todo)"></button>
+						</div>
+						<input class="edit"
+						 		v-model="todo.title"
+						 		v-focus="todo === editedTodo"
+						 		@keyup.enter="doneEdit(todo)"
+						 		@keyup.esc="cancelEdit(todo)"
+						 		@blur="cancelEdit(todo)">
+					</li>
+				</ul>
+			</section>
+
+			<footer class="footer" v-show="showTodos">
+				<span class="todo-count">
+					<strong v-cloak>{{ activeCount }}</strong> items have been finished
+				</span>
+				<ul class="filters">
+					<li>
+						<a href="#/"
+							:class="{ selected: visibility === 'all'}"
+							@click="visibility='all'">All</a>
+					</li>
+					<li>
+						<a href="#/active"
+							:class="{ selected: visibility === 'active'}"
+							@click="visibility='active'">Active</a>
+					</li>
+					<li>
+						<a href="#/completed"
+							:class="{ selected: visibility === 'completed'}"
+							@click="visibility='completed'">Completed</a>
+					</li>
+				</ul>
+				<button class="clear-completed"
+						@click="removeCompleted"
+						v-show="completedCount">
+						Remove Done
+				</button>
+			</footer>
+		</section>
+
+		<script src="./js/store.js" charset="utf-8"></script>
+		<script src="./js/app.js" charset="utf-8"></script>
+	</body>
+</html>
